@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Comment Toxicity is a production-grade toxicity classification pipeline using LightGBM ensemble with stratified CV, OOF target encoding, and per-class threshold tuning." />
+    <meta name="theme-color" content="#0a0f0b" />
+    <meta property="og:title" content="Comment Toxicity | ML Classification Pipeline" />
+    <meta property="og:description" content="A resume-ready ML project with LightGBM ensemble, 66 engineered features, OOF target encoding, and 0.817 macro F1 on imbalanced 4-class toxicity data." />
+    <meta property="og:type" content="website" />
+    <title>Comment Toxicity | ML Classification Pipeline</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Comment Toxicity home">
+        <span class="brand-mark"></span>
+        Comment Toxicity
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#eda">EDA</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#results">Results</a>
+        <a href="#features">Features</a>
+        <a href="https://github.com/BriskAM/comment-toxicity">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Python / LightGBM / Scikit-learn / Multi-class</p>
+          <h1>Detecting comment toxicity at scale.</h1>
+          <p class="lede">
+            Comment Toxicity converts a Kaggle notebook into a reproducible ML pipeline:
+            rich feature engineering, out-of-fold target encoding, LightGBM ensemble,
+            Nelder-Mead blend optimization, and per-class threshold tuning on 198K samples.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://github.com/BriskAM/comment-toxicity">View source</a>
+            <a class="button" href="https://colab.research.google.com/github/BriskAM/comment-toxicity/blob/main/notebooks/original_analysis.ipynb">Open in Colab</a>
+          </div>
+        </div>
+        <div class="hero-panel" aria-label="Project metrics">
+          <div class="metric-card large">
+            <span class="metric-label">Macro F1 Score</span>
+            <strong>0.817</strong>
+            <span class="metric-note">Threshold-tuned LightGBM ensemble (2-fold CV)</span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric-card">
+              <span class="metric-label">Accuracy</span>
+              <strong>0.912</strong>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Classes</span>
+              <strong>4</strong>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Train samples</span>
+              <strong>198K</strong>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Features</span>
+              <strong>66+</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="eda" class="section two-column">
+        <div>
+          <p class="eyebrow">Exploratory Data Analysis</p>
+          <h2>Understanding the data distribution and signals.</h2>
+          <p>
+            The dataset is heavily imbalanced: class 0 (non-toxic) dominates at 57.7%.
+            Demographic fields (race, religion, gender) are missing for ~73% of comments,
+            but their presence is a strong toxicity signal.
+          </p>
+          <div class="eda-insights">
+            <div class="insight"><span class="insight-num">73%</span> missing demographics</div>
+            <div class="insight"><span class="insight-num">2.5x</span> more demographics filled for toxic class</div>
+            <div class="insight"><span class="insight-num">57.7%</span> of comments are non-toxic</div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <canvas id="classDistributionChart"></canvas>
+        </div>
+      </section>
+
+      <section class="section two-column">
+        <div class="chart-card full-width">
+          <h3>Demographic Presence vs Toxicity</h3>
+          <canvas id="demographicChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Engagement by Label</h3>
+          <canvas id="engagementChart"></canvas>
+        </div>
+      </section>
+
+      <section id="pipeline" class="section">
+        <div class="section-head">
+          <p class="eyebrow">System Design</p>
+          <h2>Notebook logic converted into a reusable training pipeline.</h2>
+        </div>
+        <div class="pipeline">
+          <article>
+            <span>01</span>
+            <h3>Feature Engineering</h3>
+            <p>66+ features: text stats, punctuation, datetime parts, engagement ratios, demographic flags, post-level aggregates.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>OOF Target Encoding</h3>
+            <p>5-fold smooth mean encoding on demographic columns. Prevents leakage while capturing categorical signals.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>LightGBM + Ensemble</h3>
+            <p>Class-weighted LightGBM with early stopping, plus LR/RF baselines. Nelder-Mead optimized blend weights.</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>Threshold Tuning</h3>
+            <p>Per-class decision thresholds optimized via Nelder-Mead to maximize macro F1 on minority classes.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="results" class="section two-column">
+        <div>
+          <p class="eyebrow">Measured Results</p>
+          <h2>LightGBM ensemble significantly outperforms baselines.</h2>
+          <p>
+            Evaluated via out-of-fold predictions from 2-fold stratified CV.
+            The blend optimizer converged to 100% LightGBM weight, and per-class
+            threshold tuning improved macro F1 from 0.813 to 0.817.
+          </p>
+        </div>
+        <div class="chart-card">
+          <canvas id="modelComparisonChart"></canvas>
+        </div>
+      </section>
+
+      <section class="section two-column">
+        <div class="chart-card full-width">
+          <h3>Per-Class Precision, Recall &amp; F1 (Tuned)</h3>
+          <canvas id="perClassChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Confusion Matrix</h3>
+          <canvas id="confusionHeatmap"></canvas>
+        </div>
+      </section>
+
+      <section id="features" class="section two-column">
+        <div>
+          <p class="eyebrow">Feature Importance</p>
+          <h2>Post-level label rates dominate, followed by demographics.</h2>
+          <p>
+            The strongest predictors are per-thread toxicity rates (toxicity clusters in
+            discussions), demographic fields filled by users, and target-encoded race/gender/religion.
+            Text-derived features and engagement metrics add complementary signal.
+          </p>
+          <div class="feature-categories">
+            <div class="fcat"><span class="fcat-dot fcat-p"></span> Post-level features</div>
+            <div class="fcat"><span class="fcat-dot fcat-d"></span> Demographics</div>
+            <div class="fcat"><span class="fcat-dot fcat-t"></span> Text &amp; engagement</div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <canvas id="featureImportanceChart"></canvas>
+        </div>
+      </section>
+
+      <section class="section results-table-section">
+        <div>
+          <p class="eyebrow">Full Classification Report</p>
+          <h2>Threshold-tuned LightGBM ensemble.</h2>
+          <p>
+            Per-class breakdown showing precision, recall, and F1 for each toxicity level.
+          </p>
+        </div>
+        <table class="result-table">
+          <thead>
+            <tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1 Score</th><th>Support</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0 — Non-toxic</td><td class="good">0.98</td><td class="good">0.95</td><td class="good">0.96</td><td>114,173</td></tr>
+            <tr><td>1 — Toxic</td><td class="mid">0.76</td><td class="good">0.81</td><td class="mid">0.79</td><td>15,918</td></tr>
+            <tr><td>2 — Very toxic</td><td class="good">0.86</td><td class="good">0.90</td><td class="good">0.88</td><td>62,440</td></tr>
+            <tr><td>3 — Extremely toxic</td><td class="warn">0.66</td><td class="warn">0.61</td><td class="warn">0.64</td><td>5,469</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td><strong>Macro Avg</strong></td><td><strong>0.82</strong></td><td><strong>0.82</strong></td><td><strong>0.82</strong></td><td>198,000</td></tr>
+            <tr><td><strong>Weighted Avg</strong></td><td><strong>0.91</strong></td><td><strong>0.91</strong></td><td><strong>0.91</strong></td><td>198,000</td></tr>
+          </tfoot>
+        </table>
+      </section>
+    </main>
+
+    <footer>
+      <span>Built by Akshit Mehta</span>
+      <a href="https://github.com/BriskAM/comment-toxicity">github.com/BriskAM/comment-toxicity</a>
+    </footer>
+  </body>
+</html>
