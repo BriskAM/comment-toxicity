@@ -13,6 +13,7 @@ data/
 *.feather
 *.pkl
 *.joblib
+*.zip
 runs/
 outputs/
 .ipynb_checkpoints/
