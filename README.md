@@ -2,6 +2,8 @@
 
 Project site: <https://briskam.github.io/comment-toxicity/>
 
+[Full improvement journey](improvement_journey.md) — every problem, fix, and design decision documented.
+
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/BriskAM/comment-toxicity/blob/main/notebooks/original_analysis.ipynb)
 [![CI](https://github.com/BriskAM/comment-toxicity/actions/workflows/ci.yml/badge.svg)](https://github.com/BriskAM/comment-toxicity/actions/workflows/ci.yml)
 
